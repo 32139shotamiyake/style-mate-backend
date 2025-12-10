@@ -1,0 +1,21 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>画像アップロードテスト</title>
+</head>
+<body>
+    <h2>サーバー機能テスト</h2>
+    <!-- 
+       action: 送り先URL
+       method: POST (送る)
+       enctype: multipart/form-data (これを書かないとファイルは送れません！)
+    -->
+    <form action="http://localhost:5000/api/upload" method="POST" enctype="multipart/form-data">
+        <p>画像を選択してください:</p>
+        <input type="file" name="image" accept="image/*">
+        <button type="submit">送信テスト</button>
+    </form>
+</body>
+</html>
