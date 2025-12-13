@@ -1,0 +1,13 @@
+# Pythonが生成するキャッシュや一時ファイル
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# pipでインストールされるパッケージ
+venv/
+env/
+.venv/
+
+#staticフォルダ
+static/
