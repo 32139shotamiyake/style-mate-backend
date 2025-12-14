@@ -8,12 +8,12 @@ class Config:
     JSON_AS_ASCII = False
 
     # MySQL接続設定
-    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://{user}:{password}@{host}/{db_name}?charset=utf8'.format(**{
-      'user': "mysql",
-      'password': "NewPassword",
-      'host': "localhost",
-      'db_name': "clothes"
-  })
+    SQLALCHEMY_DATABASE_URI = (
+    f"mysql+pymysql://{os.getenv('DB_USER')}:"
+    f"{os.getenv('DB_PASSWORD')}@"
+    f"{os.getenv('DB_HOST')}/"
+    f"{os.getenv('DB_NAME')}?charset=utf8"
+)
     
     # 追跡機能をオフ（おまじない）
     SQLALCHEMY_TRACK_MODIFICATIONS = False

@@ -1,3 +1,7 @@
+#.envファイルからキーと値のペアを読み込むライブラリ
+from dotenv import load_dotenv
+# .envファイルを読み込み、環境変数としてロードする
+load_dotenv()
 # Flask本体
 from flask import Flask
 # CORS対策（フロントと別ポート通信するため）
@@ -9,7 +13,6 @@ from routes import register_routes
 # 設定クラス
 from config import Config
 import os
-
 
 def create_app():
     """
