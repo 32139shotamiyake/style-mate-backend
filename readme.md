@@ -18,21 +18,32 @@ Flask + MySQL を用いた **StyleMate** のバックエンドリポジトリで
 ## 📂 ディレクトリ構成
 
 ```
-style-mate-backend/
-│
-├─ app.py              # アプリ起動点
-├─ config.py           # 設定（DB等）
-├─ extensions.py       # db / migrate 定義
-├─ models.py           # SQLAlchemy モデル
-├─ routes/             # ルーティング（Blueprint）
-│   ├─ __init__.py
-│   ├─ clothes.py
-│   └─ memo.py
-│
-├─ migrations/         # マイグレーション（Git管理）
-├─ requirements.txt    # 依存関係
-├─ .env.example        # 環境変数テンプレート
-└─ README.md
+.
+├── migrations
+│   ├── versions
+│   │   └── 5c37e6e5aa4e_initial_tables.py
+│   ├── alembic.ini
+│   ├── env.py
+│   ├── README
+│   └── script.py.mako
+├── models
+│   ├── __init__.py
+│   └── memo.py
+├── routes
+│   ├── __init__.py
+│   ├── clothes.py
+│   ├── memo.py
+│   └── upload.py
+├── static
+│   └── images
+├── .env
+├── .gitignore
+├── app.py
+├── config.py
+├── extensions.py
+├── readme.md
+├── requirements.txt
+└── test_upload.html
 ```
 
 ---
@@ -176,6 +187,6 @@ flask db upgrade
 
 ## 👥 開発メンバー
 
-- 名前1
-- 名前2
+- 三宅翔太
+- 櫻井唯人
 
