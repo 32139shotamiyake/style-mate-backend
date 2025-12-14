@@ -7,7 +7,7 @@ from flask import Flask
 # CORS対策（フロントと別ポート通信するため）
 from flask_cors import CORS
 # db（SQLAlchemy）を外部ファイルから読み込む
-from extensions import db
+from extensions import db, migrate
 # ルーティング登録関数
 from routes import register_routes
 # 設定クラス
@@ -29,13 +29,12 @@ def create_app():
 
     # SQLAlchemyをFlaskアプリに紐付け
     db.init_app(app)
+    
+    #Migrate初期化
+    migrate.init_app(app, db)
 
     # Blueprint（ルーティング）を一括登録
     register_routes(app)
-
-    # アプリ起動時にテーブルを自動生成
-    with app.app_context():
-        db.create_all()
 
     return app
 

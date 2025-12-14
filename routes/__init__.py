@@ -6,7 +6,6 @@ def register_routes(app):
     """
     全てのBlueprintをFlaskアプリに登録
     """
-     
     app.register_blueprint(memo_bp)
     app.register_blueprint(clothes_bp)
     app.register_blueprint(upload_bp)
