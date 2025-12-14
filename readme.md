@@ -18,32 +18,24 @@ Flask + MySQL を用いた **StyleMate** のバックエンドリポジトリで
 ## 📂 ディレクトリ構成
 
 ```
-.
-├── migrations
-│   ├── versions
-│   │   └── 5c37e6e5aa4e_initial_tables.py
-│   ├── alembic.ini
-│   ├── env.py
-│   ├── README
-│   └── script.py.mako
-├── models
+style-mate-backend/
+├── migrations/         #マイグレーション(Git管理)
+├── models              #SQLAlchemyモデル
 │   ├── __init__.py
 │   └── memo.py
-├── routes
+├── routes              #ルーティング(Blueprint)
 │   ├── __init__.py
 │   ├── clothes.py
 │   ├── memo.py
 │   └── upload.py
-├── static
-│   └── images
-├── .env
-├── .gitignore
-├── app.py
-├── config.py
-├── extensions.py
+├── .env.example        #環境変数テンプレート
+├── .gitignore          #gitで管理しないものの定義
+├── app.py              #アプリ起動点
+├── config.py           #設定(DB等)
+├── extensions.py       #db / migrate 定義
 ├── readme.md
-├── requirements.txt
-└── test_upload.html
+├── requirements.txt    #依存関係
+└── test_upload.html    #画像アップロードテスト用
 ```
 
 ---
