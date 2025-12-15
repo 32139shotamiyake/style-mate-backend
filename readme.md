@@ -7,11 +7,11 @@ Flask + MySQL を用いた **StyleMate** のバックエンドリポジトリで
 
 ## 📌 概要
 
-- フレームワーク：Flask
-- DB：MySQL
-- ORM：SQLAlchemy
-- マイグレーション：Flask-Migrate
-- 開発人数：2人
+* フレームワーク：Flask
+* DB：MySQL
+* ORM：SQLAlchemy
+* マイグレーション：Flask-Migrate
+* 開発人数：2人
 
 ---
 
@@ -19,23 +19,21 @@ Flask + MySQL を用いた **StyleMate** のバックエンドリポジトリで
 
 ```
 style-mate-backend/
-├── migrations/         #マイグレーション(Git管理)
-├── models              #SQLAlchemyモデル
-│   ├── __init__.py
-│   └── memo.py
-├── routes              #ルーティング(Blueprint)
-│   ├── __init__.py
-│   ├── clothes.py
-│   ├── memo.py
-│   └── upload.py
-├── .env.example        #環境変数テンプレート
-├── .gitignore          #gitで管理しないものの定義
-├── app.py              #アプリ起動点
-├── config.py           #設定(DB等)
-├── extensions.py       #db / migrate 定義
-├── readme.md
-├── requirements.txt    #依存関係
-└── test_upload.html    #画像アップロードテスト用
+│
+├─ app.py              # アプリ起動点
+├─ config.py           # 設定（DB等）
+├─ extensions.py       # db / migrate 定義
+├─ models.py           # SQLAlchemy モデル
+├─ routes/             # ルーティング（Blueprint）
+│   ├─ __init__.py
+│   ├─ clothes.py
+│   └─ memo.py
+│
+├─ migrations/         # マイグレーション（Git管理）
+├─ requirements.txt    # 依存関係
+├──.gitignore          # gitが無視するファイルの定義
+├─ .env.example        # 環境変数テンプレート
+└─ README.md
 ```
 
 ---
@@ -112,9 +110,9 @@ http://localhost:5000/
 
 ## 🌱 ブランチ運用ルール
 
-- `main` ：安定版（直接 push 禁止）
-- `develop` ：開発用ブランチ
-- `feature/*` ：機能ごとの作業ブランチ
+* `main` ：安定版（直接 push 禁止）
+* `develop` ：開発用ブランチ
+* `feature/*` ：機能ごとの作業ブランチ
 
 ### 作業手順
 
@@ -147,38 +145,110 @@ flask db upgrade
 
 ## 🗃 データ同期について
 
-- **DB構造（models / migrations）のみ同期**
-- INSERT したデータ（行）は同期しない
-- 初期データが必要な場合は `seed.py` を使用
+* **DB構造（models / migrations）のみ同期**
+* INSERT したデータ（行）は同期しない
+* 初期データが必要な場合は `seed.py` を使用
 
 ---
 
 ## ⚠️ 注意事項
 
-- `db.create_all()` は使用しません
-- `migrations/` フォルダは必ず Git 管理します
-- `debug=True` は develop まで
+* `db.create_all()` は使用しません
+* `migrations/` フォルダは必ず Git 管理します
+* `debug=True` は develop まで
 
 ---
 
 ## 🧪 よくあるトラブル
 
 ### Q. DB接続エラーが出る
-- MySQL が起動しているか
-- `.env` の値が正しいか
-- `flask db upgrade` を実行したか
+
+* MySQL が起動しているか
+* `.env` の値が正しいか
+* `flask db upgrade` を実行したか
 
 ---
 
 ## 📌 補足
 
-- 本リポジトリは学習・課題用途を想定しています
-- 本番運用時は設定・セキュリティの見直しが必要です
+* 本リポジトリは学習・課題用途を想定しています
+* 本番運用時は設定・セキュリティの見直しが必要です
 
 ---
 
 ## 👥 開発メンバー
 
-- 三宅翔太
-- 櫻井唯人
+* 三宅翔太
+* 櫻井唯人
 
+---
+
+## 起動方法（重要）
+
+### 開発環境（Windows / macOS 共通）
+
+本プロジェクトでは **app.run は使用しません**。
+WSGI サーバー（waitress / gunicorn）経由で起動します。
+
+```bash
+# 仮想環境を有効化後
+waitress-serve --listen=127.0.0.1:5000 wsgi:app
+```
+
+ブラウザで以下にアクセスしてください：
+
+```
+http://localhost:5000
+```
+
+---
+
+## ディレクトリ構成（抜粋）
+
+```text
+style-mate-backend/
+├── app.py          # Flask アプリ生成（create_app）
+├── wsgi.py         # WSGI エントリーポイント
+├── routes/         # ルーティング（Blueprint）
+├── models/         # DB モデル
+├── extensions.py   # db などの拡張機能
+├── config.py       # 設定(DB等)
+├── static/images/  # 画像アップロード先（自動生成）
+├── .env.example    # 環境変数サンプル
+└── README.md
+```
+
+---
+
+## 開発ルール（2人開発）
+
+* **main** : 安定版のみ（直接 push しない）
+* **develop** : 開発統合ブランチ
+* **feature/** : 機能ごとに作成し、完了後は削除
+
+```bash
+git checkout develop
+git checkout -b feature/add-upload-api
+```
+
+---
+
+## 環境変数について
+
+`.env` ファイルを作成し、以下を設定してください。
+
+```env
+DB_USER=mysql
+DB_PASSWORD=your_password
+DB_HOST=localhost
+DB_NAME=clothes
+```
+
+※ `.env` は **GitHub に push しません**
+
+---
+
+## 備考
+
+* DB スキーマ変更時は Flask-Migrate を使用
+* 画像保存ディレクトリは起動時に自動生成されます
