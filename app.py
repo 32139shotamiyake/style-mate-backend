@@ -11,7 +11,7 @@ from extensions import db, migrate
 # ルーティング登録関数
 from routes import register_routes
 # 設定クラス
-from config import Config
+from config import DevelopmentConfig,ProductionConfig
 import os
 
 def create_app():
@@ -22,7 +22,12 @@ def create_app():
     app = Flask(__name__)
 
     # 設定ファイルを読み込む
-    app.config.from_object(Config)
+    env=os.getenv("FLASK_ENV","development")
+
+    if env=="production":
+        app.config.from_object(ProductionConfig)
+    else:
+        app.config.from_object(DevelopmentConfig)
 
     # CORSを有効化
     CORS(app)
