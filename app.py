@@ -29,6 +29,9 @@ def create_app():
     else:
         app.config.from_object(DevelopmentConfig)
 
+    # 画像保存用ディレクトリを作成（なければ）
+    os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+
     # CORSを有効化
     CORS(app)
 
@@ -46,12 +49,3 @@ def create_app():
 
 # アプリ生成
 app = create_app()
-
-
-# python app.py で直接実行された場合のみ起動
-if __name__ == "__main__":
-    # 画像保存用ディレクトリを作成（なければ）
-    os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
-
-    # 開発用サーバ起動
-    app.run(debug=True, port=5000)
