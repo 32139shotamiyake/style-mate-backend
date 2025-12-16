@@ -37,6 +37,10 @@ def create_app():
 
     # SQLAlchemyをFlaskアプリに紐付け
     db.init_app(app)
+
+    #DB初期化時のみコメントを外す！！
+    #with app.app_context():
+    #    db.create_all()
     
     #Migrate初期化
     migrate.init_app(app, db)
