@@ -10,9 +10,12 @@ class BaseConfig:
     # 追跡機能をオフ（おまじない）
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     
+    # 画像アップロード先ディレクトリ(相対パス)
+    RELATIVE_UPLOAD_FOLDER="uploads"
+
     # 画像アップロード先ディレクトリ
     UPLOAD_FOLDER = os.path.join(
-        os.path.dirname(__file__), "static", "images"
+        os.path.dirname(__file__), "static", RELATIVE_UPLOAD_FOLDER
     )
 
 class DevelopmentConfig(BaseConfig):
