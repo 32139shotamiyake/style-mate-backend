@@ -31,7 +31,6 @@ style-mate-backend/
 │
 ├─ migrations/         # マイグレーション（Git管理）
 ├─ requirements.txt    # 依存関係
-├──.gitignore          # gitが無視するファイルの定義
 ├─ .env.example        # 環境変数テンプレート
 └─ README.md
 ```
@@ -97,7 +96,7 @@ flask db upgrade
 ### 6️⃣ サーバー起動
 
 ```bash
-python app.py
+   waitress-serve --listen=127.0.0.1:5000 wsgi:app
 ```
 
 ブラウザで以下にアクセスできれば成功です。
@@ -178,8 +177,8 @@ flask db upgrade
 
 ## 👥 開発メンバー
 
-* 三宅翔太
-* 櫻井唯人
+* 名前1
+* 名前2
 
 ---
 
@@ -212,7 +211,6 @@ style-mate-backend/
 ├── routes/         # ルーティング（Blueprint）
 ├── models/         # DB モデル
 ├── extensions.py   # db などの拡張機能
-├── config.py       # 設定(DB等)
 ├── static/images/  # 画像アップロード先（自動生成）
 ├── .env.example    # 環境変数サンプル
 └── README.md
@@ -230,6 +228,71 @@ style-mate-backend/
 git checkout develop
 git checkout -b feature/add-upload-api
 ```
+
+---
+
+## データベース初期化手順（重要）
+
+### 新しいデータベースを使い始める場合
+
+Flask-Migrate を使用しているため、**DB 名を変更しただけではテーブルは作成されません**。
+以下の手順で初期化してください。
+
+---
+
+### 1. MySQL にデータベースを作成
+
+```sql
+CREATE DATABASE stylemate_db
+  CHARACTER SET utf8mb4
+  COLLATE utf8mb4_unicode_ci;
+```
+
+※ データベース名は `.env` の `DB_NAME` と一致させてください。
+
+---
+
+### 2. 環境変数を設定（.env）
+
+```env
+DB_USER=mysql
+DB_PASSWORD=your_password
+DB_HOST=localhost
+DB_NAME=stylemate_db
+```
+
+---
+
+### 3. 初期テーブルを作成（初回のみ）
+
+新しい DB は Alembic の履歴を持たないため、
+**現在のモデル構造でテーブルを作成し、履歴を同期します。**
+
+```bash
+# 初回のみ実行
+flask db stamp head
+```
+
+※ この時点で DB にはテーブルが存在している必要があります。
+
+---
+
+### 4. 以降の運用
+
+モデルを変更した場合は、以下の手順で反映します。
+
+```bash
+flask db migrate -m "describe change"
+flask db upgrade
+```
+
+---
+
+### 注意事項
+
+* `flask db upgrade` は **既存 DB には実行してOK**
+* **空の新 DB に直接 upgrade するとエラーになります**
+* insert されたデータ（行）は migrate では同期されません
 
 ---
 
