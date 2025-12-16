@@ -1,4 +1,6 @@
 from flask import Blueprint, jsonify
+from models import Clothes
+from extensions import db
 
 # clothes API用 Blueprint
 clothes_bp = Blueprint("clothes", __name__)
@@ -23,4 +25,7 @@ def get_clothes():
     """
     服データを取得するAPI
     """
-    return jsonify(mock_data)
+    clothes = Clothes.query.all()
+    return jsonify([
+        {"id": c.id, "image_path": c.image_path, "genre": c.genre, "color": c.color, "created_at": c.created_at, "updated_at":c.updated_at} for c in clothes
+    ])
