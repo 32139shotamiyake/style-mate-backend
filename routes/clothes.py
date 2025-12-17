@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify,request, current_app, url_for
 from models import Clothes
 from extensions import db
 from werkzeug.utils import secure_filename
+from sqlalchemy.exc import SQLAlchemyError
 from pathlib import Path
 import uuid
 import os
@@ -93,6 +94,38 @@ def get_clothes():
 
 @clothes_bp.route("/api/clothes/<int:id>", methods=["DELETE"])
 def delete_clothes(id):
+    #対象レコード取得
+    clothes = Clothes.query.get_or_404(id)
+    
+    try:
+        #画像パスを退避
+        image_path=clothes.image_path
+        if image_path:
+            #URL -> ファイルパスに変換
+            filename=os.path.basename(image_path)
+            file_path=os.path.join(current_app.config["UPLOAD_FOLDER"],filename)
+            print(file_path)
+        else:
+            file_path = None
+
+        #DB削除
+        db.session.delete(clothes)
+        db.session.flush()
+
+        #画像削除
+        if file_path and os.path.exists(file_path):
+            os.remove(file_path)
+
+        #両方成功したらcommit
+        db.session.commit()
+
+        return jsonify({"message":"deleted successfully"})
+    
+    except SQLAlchemyError as e:
+        db.session.rollback()
+        return jsonify({"error":str(e)}),500
+    
+    """
     #受け取ったidの行を取得
     clothes = Clothes.query.get(id)
 
@@ -114,3 +147,4 @@ def delete_clothes(id):
     db.session.commit()
 
     return jsonify({"message": "deleted"})
+"""
