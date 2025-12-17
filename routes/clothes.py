@@ -53,9 +53,7 @@ def post_clothes():
     file.save(save_path)
 
     # DBに保存するパスを生成
-    relative_path = str(
-        Path(current_app.config["RELATIVE_UPLOAD_FOLDER"]) / filename
-    )
+    relative_path = (Path(current_app.config["RELATIVE_UPLOAD_FOLDER"]) / filename).as_posix()
 
     cloth=Clothes(image_path=relative_path,genre=genre,color=color)
 
