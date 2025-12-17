@@ -73,12 +73,18 @@ pip install -r requirements.txt
 ### 4️⃣ .env の作成
 
 `.env.example` をコピーして `.env` を作成してください。
+devのやつが開発用パスワードとかproは本番用
 
 ```env
-DB_USER=mysql
-DB_PASSWORD=your_password
-DB_HOST=localhost
-DB_NAME=clothes
+FLASK_ENV=development
+DEV_DB_USER=mysql
+DEV_DB_PASSWORD=NewPassword
+DEV_DB_HOST=localhost
+DEV_DB_NAME=stylemate_db
+PRO_DB_USER=hogehoge
+PRO_DB_PASSWORD=hogehoge
+PRO_DB_HOST=hogehoge
+PRO_DB_NAME=hogehoge
 ```
 
 ※ `.env` は **Git に追加しません**
@@ -87,9 +93,13 @@ DB_NAME=clothes
 
 ### 5️⃣ DB マイグレーション
 
+app.pyの初期設定のところのコメントアウトのシャープを消す
+一旦
 ```bash
-flask db upgrade
+   waitress-serve --listen=127.0.0.1:5000 wsgi:app
 ```
+実行したらすぐCtrl+Cで終了
+コメントアウトを元に戻す！！（重要）
 
 ---
 
