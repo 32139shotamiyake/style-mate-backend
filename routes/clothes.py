@@ -93,11 +93,23 @@ def get_clothes():
 
 @clothes_bp.route("/api/clothes/<int:id>", methods=["DELETE"])
 def delete_clothes(id):
+    #受け取ったidの行を取得
     clothes = Clothes.query.get(id)
 
+    #なかったらエラー
     if clothes is None:
         return jsonify({"error": "not found"}), 404
 
+    #画像ファイル削除
+    if clothes.image_path:
+        image_path = os.path.join(
+            current_app.config["UPLOAD_FOLDER"],
+            os.path.basename(clothes.image_path)
+        )
+        if os.path.exists(image_path):
+            os.remove(image_path)
+            
+    #dbから削除
     db.session.delete(clothes)
     db.session.commit()
 
