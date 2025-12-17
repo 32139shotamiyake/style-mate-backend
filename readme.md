@@ -243,9 +243,7 @@ Flask-Migrate を使用しているため、**DB 名を変更しただけでは�
 ### 1. MySQL にデータベースを作成
 
 ```sql
-CREATE DATABASE stylemate_db
-  CHARACTER SET utf8mb4
-  COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE stylemate_db;
 ```
 
 ※ データベース名は `.env` の `DB_NAME` と一致させてください。
