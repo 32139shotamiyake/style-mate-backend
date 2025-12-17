@@ -90,3 +90,15 @@ def get_clothes():
         "created_at": c.created_at.isoformat(), 
         "updated_at":c.updated_at.isoformat() if c.updated_at else None} for c in clothes
         ])
+
+@clothes_bp.route("/api/clothes/<int:id>", methods=["DELETE"])
+def delete_clothes(id):
+    clothes = Clothes.query.get(id)
+
+    if clothes is None:
+        return jsonify({"error": "not found"}), 404
+
+    db.session.delete(clothes)
+    db.session.commit()
+
+    return jsonify({"message": "deleted"})
