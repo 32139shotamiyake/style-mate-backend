@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, url_for
 from models import Clothes
 from extensions import db
 from sqlalchemy.sql import func
@@ -21,5 +21,9 @@ def suggest():
     return jsonify({
         "id": clothes.id,
         "color": clothes.color,
-        "image": clothes.image_path
+        "image_path": url_for(
+            "static",
+            filename=clothes.image_path,
+            _external=True
+            )
     })
