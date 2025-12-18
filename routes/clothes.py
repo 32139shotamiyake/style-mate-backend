@@ -118,7 +118,12 @@ def update_clothes(id):
         # 新画像がある場合
         if new_image:
             original = secure_filename(new_image.filename)
-            ext=Path(original).suffix
+            #拡張子を小文字に
+            ext=Path(original).suffix.lower()
+            #拡張子の制限
+            if ext not in {".jpg", ".jpeg", ".png", ".webp"}:
+                return jsonify({"error": "invalid file type"}), 400
+            #ファイル名衝突対策
             unique_filename = f"{uuid.uuid4().hex}{ext}"
 
             new_image_path = os.path.join(current_app.config["UPLOAD_FOLDER"], unique_filename)
