@@ -117,12 +117,15 @@ def update_clothes(id):
     try:
         # 新画像がある場合
         if new_image:
-            filename = secure_filename(new_image.filename)
-            new_image_path = os.path.join(current_app.config["UPLOAD_FOLDER"], filename)
+            original = secure_filename(new_image.filename)
+            ext=Path(original).suffix
+            unique_filename = f"{uuid.uuid4().hex}{ext}"
+
+            new_image_path = os.path.join(current_app.config["UPLOAD_FOLDER"], unique_filename)
             new_image.save(new_image_path)
 
             # DBには新パスを保存
-            new_save_image_path = (Path(current_app.config["RELATIVE_UPLOAD_FOLDER"]) / filename).as_posix()
+            new_save_image_path = (Path(current_app.config["RELATIVE_UPLOAD_FOLDER"]) / unique_filename).as_posix()
             clothes.image_path = new_save_image_path
 
         db.session.commit()
