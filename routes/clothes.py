@@ -92,6 +92,57 @@ def get_clothes():
         "updated_at":c.updated_at.isoformat() if c.updated_at else None} for c in clothes
         ])
 
+@clothes_bp.route("/api/clothes/<int:id>", methods=["PUT"])
+def update_clothes(id):
+    clothes = Clothes.query.get(id)
+
+    if clothes is None:
+        return jsonify({"error": "not found"}), 404
+
+    # フォーム値更新
+    genre = request.form.get("genre")
+    color = request.form.get("color")
+
+    if genre:
+        clothes.genre = genre
+    if color:
+        clothes.color = color
+
+    # 画像更新処理
+    new_image = request.files.get("image")
+    old_filename=os.path.basename(clothes.image_path)
+    old_image_path = os.path.join(current_app.config["UPLOAD_FOLDER"], old_filename)  # DBに保存されているパス
+    new_image_path = None
+
+    try:
+        # 新画像がある場合
+        if new_image:
+            filename = secure_filename(new_image.filename)
+            new_image_path = os.path.join(current_app.config["UPLOAD_FOLDER"], filename)
+            new_image.save(new_image_path)
+
+            # DBには新パスを保存
+            new_save_image_path = (Path(current_app.config["RELATIVE_UPLOAD_FOLDER"]) / filename).as_posix()
+            clothes.image_path = new_save_image_path
+
+        db.session.commit()
+
+        # commit 成功後に古い画像削除
+        if new_image and old_image_path:
+            if os.path.exists(old_image_path):
+                os.remove(old_image_path)
+
+        return jsonify({"message": "updated successfully"})
+
+    except Exception as e:
+        db.session.rollback()
+
+        # DB失敗時は新画像を削除
+        if new_image_path and os.path.exists(new_image_path):
+            os.remove(new_image_path)
+
+        return jsonify({"error": str(e)}), 500
+    
 @clothes_bp.route("/api/clothes/<int:id>", methods=["DELETE"])
 def delete_clothes(id):
     #対象レコード取得
