@@ -20,6 +20,7 @@ def suggest():
     
     return jsonify({
         "id": clothes.id,
+        "genre":clothes.genre,
         "color": clothes.color,
         "image_path": url_for(
             "static",
