@@ -121,6 +121,9 @@ def update_clothes(id):
             original = secure_filename(new_image.filename)
             #拡張子を小文字に
             ext=Path(original).suffix.lower()
+            #拡張子なしファイル対策
+            if not ext:
+                return jsonify({"error": "invalid file extension"}), 400
             #拡張子の制限
             if ext not in {".jpg", ".jpeg", ".png", ".webp"}:
                 return jsonify({"error": "invalid file type"}), 400
