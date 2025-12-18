@@ -108,8 +108,10 @@ def update_clothes(id):
 
     # 画像更新処理
     new_image = request.files.get("image")
-    old_filename=os.path.basename(clothes.image_path)
-    old_image_path = os.path.join(current_app.config["UPLOAD_FOLDER"], old_filename)  # DBに保存されているパス
+    if clothes.image_path and new_image:
+        old_filename=os.path.basename(clothes.image_path)
+        old_image_path = os.path.join(current_app.config["UPLOAD_FOLDER"], old_filename)  # DBに保存されているパス
+    
     new_image_path = None
 
     try:
