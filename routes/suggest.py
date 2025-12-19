@@ -1,8 +1,6 @@
 from flask import Blueprint, request, jsonify, url_for
 from models import Clothes
 from extensions import db
-import uuid
-import os
 from werkzeug.utils import secure_filename
 from sqlalchemy.sql import func
 from sqlalchemy import or_, select
@@ -10,45 +8,23 @@ from sqlalchemy import or_, select
 # Suggest関連API用 Blueprint
 suggest_bp = Blueprint("suggest", __name__)
 
-@suggest_bp.route("/api/suggest", methods=["POST"])
-def suggest():
+@suggest_bp.route("/api/suggest/<int:id>", methods=["POST"])
+def suggest(id):
     """
-    Clothes一覧を取得するAPI
+    服の提案をするAPI
     """
-    # リクエストに画像があるか確認
-    file = request.files.get("image")
+    clothes = Clothes.query.get(id)
 
-    #リクエストにジャンルがあるか確認
-    genre=request.form.get("genre")
+    if clothes is None:
+        return jsonify({"error": "not found"}), 404
 
-    #リクエストに色があるか確認
-    color=request.form.get("color")
+    # genreを取得
+    genre = clothes.genre
 
-    #ファイル名が空か確認
-    if not file or not genre or not color or file.filename == "":
-        return jsonify({"error": "image, genre, color are required"}), 400
-
-    # 安全なファイル名に変換
-    filename = secure_filename(file.filename)
-
-    # ファイル名の衝突を回避
-    ext = os.path.splitext(filename)[1].lower()
-    filename = f"{uuid.uuid4().hex}{ext}"
-
-    #拡張子なしファイル対策
-    if not ext:
-        return jsonify({"error": "invalid file extension"}), 400
-
-    #画像ファイル以外をはじく
-    ALLOWED_EXTENSIONS = {".png", ".jpg", ".jpeg", ".gif"}
-
-    if ext not in ALLOWED_EXTENSIONS:
-        return jsonify({"error": "unsupported file type"}), 400
-    
     bottoms=None
     tops = None
     #ジャンルがtopのとき
-    if genre == "top":
+    if genre == "Top":
         bottoms = (
             Clothes.query.filter_by(genre="bottom")
             .order_by(func.rand())
@@ -68,7 +44,7 @@ def suggest():
         })
     
     #ジャンルがbottomのとき
-    if genre == "bottom":
+    if genre == "Bottom":
         tops=(
             Clothes.query.filter_by(genre="top")
             .order_by(func.rand())
