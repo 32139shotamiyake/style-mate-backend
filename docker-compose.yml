@@ -1,0 +1,28 @@
+version: "3.9"
+
+services:
+  backend:
+    build: .
+    container_name: stylemate-backend
+    env_file:
+      - .env.production
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mysql
+    volumes:
+      - ./static/images:/app/static/images
+
+  mysql:
+    image: mysql:8.0
+    container_name: stylemate-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: stylemate_db
+    volumes:
+      - mysql-data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+
+volumes:
+  mysql-data:
