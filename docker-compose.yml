@@ -5,7 +5,7 @@ services:
     build: .
     container_name: stylemate-backend
     env_file:
-      - .env.production
+      - .env
     ports:
       - "5000:5000"
     depends_on:
